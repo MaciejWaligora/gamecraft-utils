@@ -49,22 +49,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b version-bump
-          git add package.json
-          git commit -m "chore: bump version to ${{ env.new_version }}"
-          git fetch origin
-          # Rebase the current branch onto master
-          git rebase origin/master || git rebase --abort
-          git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git version-bump --force
-
-      - name: Create Pull Request
-        if: env.SKIP_BUMP != 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.PAT }}
-          commit-message: "chore: bump version to ${{ env.new_version }}"
-          branch: version-bump
-          base: master
-          title: "chore: bump version to ${{ env.new_version }}"
-          body: "This PR bumps the version to ${{ env.new_version }}."
-          labels: version-bump
+          git checkout master
+          git pull origin master
+          git merge --no-ff version-bump -m "Merge branch 'version-bump' into master"
+          git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git master
