@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'package.json'
 
 jobs:
   bump-version:
@@ -20,24 +22,30 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Check commit message
+        id: check_commit
+        run: |
+          if [[ "$(git log -1 --pretty=%B)" == *"chore: bump version to"* ]]; then
+            echo "SKIP_BUMP=true" >> $GITHUB_ENV
+          fi
+
       - name: Bump minor version
+        if: env.SKIP_BUMP != 'true'
         id: bump_version
         run: |
           current_version=$(jq -r .version package.json)
-          # Extract major, minor, and patch versions
           IFS='.' read -r -a version_parts <<< "$current_version"
           major=${version_parts[0]}
           minor=${version_parts[1]}
           patch=${version_parts[2]}
-          # Increment minor version and reset patch version
           minor=$((minor + 1))
           new_version="$major.$minor.0"
-          # Update package.json with the new version
           jq ".version = \"$new_version\"" package.json > package.tmp.json
           mv package.tmp.json package.json
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Commit changes
+        if: env.SKIP_BUMP != 'true'
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
