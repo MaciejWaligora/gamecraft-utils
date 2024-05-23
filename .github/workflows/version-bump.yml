@@ -33,8 +33,7 @@ jobs:
           # Update package.json with the new version
           jq ".version = \"$new_version\"" package.json > package.tmp.json
           mv package.tmp.json package.json
-        outputs:
-          new_version: ${{ steps.bump_version.outputs.new_version }}
+          echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Commit and push version bump
         env:
@@ -43,5 +42,5 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add package.json
-          git commit -m "chore: bump version to ${{ steps.bump_version.outputs.new_version }}"
+          git commit -m "chore: bump version to ${{ env.new_version }}"
           git push https://$PAT@github.com/${{ github.repository }}.git HEAD:master
