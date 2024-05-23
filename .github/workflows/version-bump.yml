@@ -48,8 +48,7 @@ jobs:
           git add package.json
           git commit -m "chore: bump version to ${{ env.new_version }}"
           # Ensure the branch is up-to-date with the remote branch
-          git fetch origin
-          git rebase origin/version-bump || git rebase --abort
+          git pull --rebase origin version-bump || git pull --rebase --abort
           git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git version-bump --force
 
       - name: Create Pull Request
