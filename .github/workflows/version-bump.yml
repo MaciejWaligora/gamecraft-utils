@@ -9,7 +9,6 @@ on:
 
 jobs:
   bump-version:
-    if: github.event.head_commit.message != 'chore: bump version to *'
     runs-on: ubuntu-latest
 
     steps:
@@ -41,6 +40,7 @@ jobs:
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Commit changes
+        if: "!contains(github.event.head_commit.message, 'chore: bump version to')"
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -51,6 +51,7 @@ jobs:
           git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git version-bump
 
       - name: Create Pull Request
+        if: "!contains(github.event.head_commit.message, 'chore: bump version to')"
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.PAT }}
