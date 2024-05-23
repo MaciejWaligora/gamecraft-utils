@@ -53,7 +53,8 @@ jobs:
           git add package.json
           git commit -m "chore: bump version to ${{ env.new_version }}"
           git fetch origin
-          git rebase origin/master || git rebase --abort
+          # Handling rebase with merge commit
+          git rebase origin/master -m "Merging branch 'master' into 'version-bump'" || git rebase --abort
           git push https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git version-bump --force
 
       - name: Create Pull Request
