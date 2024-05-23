@@ -35,12 +35,22 @@ jobs:
           mv package.tmp.json package.json
           echo "new_version=$new_version" >> $GITHUB_ENV
 
-      - name: Commit and push version bump
-        env:
-          PAT: ${{ secrets.PAT }}
+      - name: Commit changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b version-bump
           git add package.json
           git commit -m "chore: bump version to ${{ env.new_version }}"
-          git push https://$PAT@github.com/${{ github.repository }}.git HEAD:master
+          git push origin version-bump
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "chore: bump version to ${{ env.new_version }}"
+          branch: version-bump
+          base: master
+          title: "chore: bump version to ${{ env.new_version }}"
+          body: "This PR bumps the version to ${{ env.new_version }}."
+          labels: version-bump
