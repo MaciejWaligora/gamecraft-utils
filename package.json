@@ -1,0 +1,26 @@
+{
+  "name": "gamecraft-utils",
+  "version": "1.0.0",
+  "description": "basic utils for gamecraft engine",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaciejWaligora/gamecraft-utils.git"
+  },
+  "author": "Maciej Waligora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaciejWaligora/gamecraft-utils/issues"
+  },
+  "homepage": "https://github.com/MaciejWaligora/gamecraft-utils#readme",
+  "devDependencies": {
+    "typescript": "^4.0.0"
+  },
+  "dependencies": {
+    "pixijs": "^7.1.4"
+  }
+}
