@@ -33,7 +33,7 @@ class Scaler {
         }
         if (renderer.renderer.view.style) {
             renderer.renderer.view.style.width = screenWidth + "px";
-            renderer.renderer.view.style.height = screenHeight + "px";
+            renderer.renderer.view.style.height = screenHeight - 4 + "px";
         }
     }
 }
